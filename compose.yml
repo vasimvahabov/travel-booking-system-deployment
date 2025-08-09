@@ -1,0 +1,34 @@
+services:
+  flight-service:
+    image: flight-service:0.1.0
+    pull_policy: missing
+    container_name: flight-service
+    build: ../flight-service
+    ports:
+      - "8899:8899"
+    environment:
+      BPL_JVM_THREAD_COUNT: 50
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight-service:5432/flights
+#      APPLICATION_TEST_DATA_ENABLED: true
+    networks:
+      - flight-service-network
+    depends_on:
+      - postgres-flight-service
+
+  postgres-flight-service:
+    image: postgres:17.5
+    container_name: postgres-flight-service
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user_postgres
+      - POSTGRES_PASSWORD=6eEvI63t20
+      - POSTGRES_DB=flights
+    networks:
+      - flight-service-network
+
+networks:
+  flight-service-network:
+    name: flight-service-network
+    driver: bridge
+#    external: true
