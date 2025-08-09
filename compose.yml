@@ -1,6 +1,6 @@
 services:
   flight-service:
-    image: flight-service:0.1.0
+    image: ghcr.io/vasimvahabov/flight-service:0.1.1
     pull_policy: missing
     container_name: flight-service
     build: ../flight-service
