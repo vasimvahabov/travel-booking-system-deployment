@@ -6,8 +6,11 @@ services:
     build: ../flight-service
     ports:
       - "8899:8899"
+      - "7733:7733"
     environment:
       BPL_JVM_THREAD_COUNT: 50
+      BPL_DEBUG_ENABLED: true
+      BPL_DEBUG_PORT: 7733
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight-service:5432/flights
 #      APPLICATION_TEST_DATA_ENABLED: true
     networks:
