@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-travel-booking-system
+spec:
+  selector:
+    matchLabels:
+      db: postgres-travel-booking-system
+  template:
+    metadata:
+      labels:
+        db: postgres-travel-booking-system
+    spec:
+      containers:
+        - name: postgres-travel-booking-system
+          image: postgres:17.5
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              value: user_postgres
+            - name: POSTGRES_PASSWORD
+              value: 6eEvI63t20
+            - name: POSTGRES_DB
+              value: flights
+          resources:
+            requests:
+              cpu: 100m
+              memory: 60Mi
+            limits:
+              cpu: 200m
+              memory: 120Mi
