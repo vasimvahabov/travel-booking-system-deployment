@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flight-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flight-service
+  template:
+    metadata:
+      name: flight-service
+      labels:
+        app: flight-service
+    spec:
+      containers:
+        - name: flight-service
+          imagePullPolicy: IfNotPresent
+          image: ghcr.io/vasimvahabov/flight-service:0.1.1
+          env:
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-travel-booking-system/flights"
+          ports:
+            - containerPort: 8899
