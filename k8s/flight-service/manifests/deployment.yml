@@ -17,6 +17,10 @@ spec:
         - name: flight-service
           imagePullPolicy: IfNotPresent
           image: ghcr.io/vasimvahabov/flight-service:0.1.1
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 5" ]
           env:
             - name: BPL_JVM_THREAD_COUNT
               value: "50"
