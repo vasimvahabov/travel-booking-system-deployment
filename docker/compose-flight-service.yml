@@ -3,7 +3,6 @@ services:
     image: ghcr.io/vasimvahabov/flight-service:0.1.1
     pull_policy: missing
     container_name: flight-service
-    build: ../flight-service
     ports:
       - "8899:8899"
       - "7733:7733"
