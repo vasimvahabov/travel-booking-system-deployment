@@ -14,8 +14,8 @@ jobs:
       - name: Setup Kubernetes tools
         uses: yokawasa/action-setup-kube-tools@v0.11.2
         with:
-          kubectl: '1.24.10'
-          kubeconform: '0.5.0'
+          kubectl: true
+          kubeconform: true
       - name: Validate manifests
         run: |
           kubeconform -strict -verbose k8s/flight-service/manifests
