@@ -1,0 +1,26 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: travel-booking-system
+build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_VERSION_FLIGHT_SERVICE}}"
+  artifacts:
+    - image: ghcr.io/vasimvahabov/flight-service
+      context: ../../../flight-service
+      custom:
+        buildCommand: ./gradlew clean bootBuildImage -Pversion=$IMAGE_VERSION_FLIGHT_SERVICE
+        dependencies:
+          paths:
+            - build.gradle
+            - src
+
+manifests:
+  rawYaml:
+    - ./manifests/*.yml
+
+portForward:
+  - resourceType: service
+    resourceName: flight-service
+    port: 8899
