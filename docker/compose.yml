@@ -2,6 +2,7 @@ services:
   flight-service:
     image: ghcr.io/vasimvahabov/flight-service:${IMAGE_VERSION_FLIGHT_SERVICE}
     pull_policy: missing
+#    pull_policy: never
     container_name: flight-service
     ports:
       - "8899:8899"
@@ -10,27 +11,29 @@ services:
       BPL_JVM_THREAD_COUNT: 50
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 7733
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight-service:5432/flights
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flights
 #      APPLICATION_TEST_DATA_ENABLED: true
     networks:
-      - flight-service-network
+      - network-travel-booking-system
     depends_on:
-      - postgres-flight-service
+      - postgres-travel-booking-system
 
-  postgres-flight-service:
+  postgres-travel-booking-system:
     image: postgres:17.5
-    container_name: postgres-flight-service
+    container_name: postgres-travel-booking-system
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=user_postgres
       - POSTGRES_PASSWORD=6eEvI63t20
-      - POSTGRES_DB=flights
+#      - POSTGRES_DB=flights
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - flight-service-network
+      - network-travel-booking-system
 
 networks:
-  flight-service-network:
-    name: flight-service-network
+  network-travel-booking-system:
+    name: network-travel-booking-system
     driver: bridge
 #    external: true
