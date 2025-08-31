@@ -51,9 +51,20 @@ services:
     networks:
       - network-travel-booking-system
 
+  redis-travel-booking-system:
+    image: redis:8.2.1
+    pull_policy: missing
+    container_name: redis-travel-booking-system
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
 volumes:
   postgres-data:
     name: postgres-data
+  redis-data:
+    name: redis-data
 
 networks:
   network-travel-booking-system:
