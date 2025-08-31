@@ -28,7 +28,7 @@ services:
       BPL_JVM_THREAD_COUNT: 50
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 8989
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flights
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flights
 #      APPLICATION_TEST_DATA_ENABLED: true
     networks:
       - network-travel-booking-system
@@ -47,8 +47,13 @@ services:
 #      - POSTGRES_DB=flights
     volumes:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - network-travel-booking-system
+
+volumes:
+  postgres-data:
+    name: postgres-data
 
 networks:
   network-travel-booking-system:
