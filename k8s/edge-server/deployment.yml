@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-server
+  labels:
+    app: edge-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-server
+  template:
+    metadata:
+      labels:
+        app: edge-server
+    spec:
+      containers:
+        - name: edge-server
+          image: ghcr.io/vasimvahabov/edge-server:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6677
+          env:
+            - name: FLIGHT_SERVICE_URL
+              value: http://flight-service
+            - name: FLIGHT_BOOKING_SERVICE_URL
+              value: http://flight-booking-service
+            - name: SPRING_DATA_REDIS_HOST
+              value: redis-travel-booking-system
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-service
