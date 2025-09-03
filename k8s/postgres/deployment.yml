@@ -20,8 +20,8 @@ spec:
               value: user_postgres
             - name: POSTGRES_PASSWORD
               value: 6eEvI63t20
-            - name: POSTGRES_DB
-              value: flights
+#            - name: POSTGRES_DB
+#              value: flights
           resources:
             requests:
               cpu: 100m
@@ -29,3 +29,10 @@ spec:
             limits:
               cpu: 200m
               memory: 120Mi
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: volume-postgres-init
+      volumes:
+        - name: volume-postgres-init
+          configMap:
+            name: postgres-init
