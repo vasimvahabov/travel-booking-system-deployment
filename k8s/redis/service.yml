@@ -5,6 +5,8 @@ metadata:
   labels:
     db: redis-travel-booking-system
 spec:
+  selector:
+    db: redis-travel-booking-system
   type: ClusterIP
   ports:
     - protocol: TCP

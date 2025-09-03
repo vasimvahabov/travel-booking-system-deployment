@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: travel-booking-system-redis
+  name: redis-travel-booking-system
   labels:
-    db: travel-booking-system-redis
+    db: redis-travel-booking-system
 spec:
   selector:
     matchLabels:
-      db: travel-booking-system-redis
+      db: redis-travel-booking-system
   template:
     metadata:
       labels:
-        db: travel-booking-system-redis
+        db: redis-travel-booking-system
     spec:
       containers:
-        - name: travel-booking-system-redis
+        - name: redis-travel-booking-system
           image: redis:8.2.1
           resources:
             requests:
