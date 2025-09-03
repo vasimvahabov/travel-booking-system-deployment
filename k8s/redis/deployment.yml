@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: travel-booking-system-redis
+  labels:
+    db: travel-booking-system-redis
+spec:
+  selector:
+    matchLabels:
+      db: travel-booking-system-redis
+  template:
+    metadata:
+      labels:
+        db: travel-booking-system-redis
+    spec:
+      containers:
+        - name: travel-booking-system-redis
+          image: redis:8.2.1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+            limits:
+              cpu: 200m
+              memory: 100Mi
