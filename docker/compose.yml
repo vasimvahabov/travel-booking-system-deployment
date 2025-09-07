@@ -18,7 +18,7 @@ services:
       BPL_DEBUG_PORT: 7878
 
   flight-service:
-    image: ghcr.io/vasimvahabov/flight-service:${IMAGE_VERSION_FLIGHT_SERVICE}
+    image: ${IMAGE_NAME_FLIGHT_SERVICE}:${IMAGE_VERSION_FLIGHT_SERVICE}
     pull_policy: missing
     container_name: flight-service
     ports:
@@ -36,15 +36,15 @@ services:
       - postgres-travel-booking-system
 
   postgres-travel-booking-system:
-    image: postgres:17.5
+    image: postgres:${IMAGE_VERSION_POSTGRES}
     pull_policy: missing
     container_name: postgres-travel-booking-system
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=user_postgres
-      - POSTGRES_PASSWORD=6eEvI63t20
-#      - POSTGRES_DB=flights
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres-data:/var/lib/postgresql/data
@@ -52,7 +52,7 @@ services:
       - network-travel-booking-system
 
   redis-travel-booking-system:
-    image: redis:8.2.1
+    image: redis:${IMAGE_VERSION_REDIS}
     pull_policy: missing
     container_name: redis-travel-booking-system
     ports:
