@@ -1,4 +1,13 @@
 services:
+  rabbitmq-travel-booking-system:
+    image: rabbitmq:${IMAGE_VERSION_RABBITMQ}
+    container_name: rabbitmq-travel-booking-system
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
   flight-booking-service:
     image: ${IMAGE_NAME_FLIGHT_BOOKING_SERVICE}:${IMAGE_VERSION_FLIGHT_BOOKING_SERVICE}
     pull_policy: missing
