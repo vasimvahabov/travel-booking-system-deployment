@@ -35,6 +35,18 @@ services:
     depends_on:
       - postgres-travel-booking-system
 
+  pgadmin-travel-booking-system:
+    image: dpage/pgadmin4:${IMAGE_VERSION_PGADMIN}
+    pull_policy: missing
+    container_name: pgadmin-travel-booking-system
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5000:80"
+    networks:
+      - network-travel-booking-system
+
   postgres-travel-booking-system:
     image: postgres:${IMAGE_VERSION_POSTGRES}
     pull_policy: missing
