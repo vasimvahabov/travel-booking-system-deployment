@@ -1,4 +1,38 @@
 services:
+  payment-service:
+    image: ${IMAGE_NAME_PAYMENT_SERVICE}:${IMAGE_VERSION_PAYMENT_SERVICE}
+    pull_policy: missing
+    container_name: payment-service
+    ports:
+      - "5566:5566"
+      - "5656:5656"
+    environment:
+      BPL_DEBUG_ENABLED: true
+      BPL_DEBUG_PORT: 5656
+      SPRING_RABBITMQ_HOST: rabbitmq-travel-booking-system
+    networks:
+      - network-travel-booking-system
+    depends_on:
+      - rabbitmq-travel-booking-system
+
+  edge-server:
+    image: ${IMAGE_NAME_EDGE_SERVER}:${IMAGE_VERSION_EDGE_SERVER}
+    pull_policy: missing
+    container_name: edge-server
+    ports:
+      - "6677:6677"
+      - "6767:6767"
+    environment:
+      BPL_DEBUG_ENABLED: true
+      BPL_DEBUG_PORT: 6767
+      SPRING_DATA_REDIS_HOST: redis-travel-booking-system
+      FLIGHT_SERVICE_URL: http://flight-service:8899
+      FLIGHT_BOOKING_SERVICE_URL: http://flight-booking-service:7788
+    networks:
+      - network-travel-booking-system
+    depends_on:
+      - redis-travel-booking-system
+
   rabbitmq-travel-booking-system:
     image: rabbitmq:${IMAGE_VERSION_RABBITMQ}
     container_name: rabbitmq-travel-booking-system
@@ -7,6 +41,8 @@ services:
       - "15672:15672"
     volumes:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - network-travel-booking-system
 
   flight-booking-service:
     image: ${IMAGE_NAME_FLIGHT_BOOKING_SERVICE}:${IMAGE_VERSION_FLIGHT_BOOKING_SERVICE}
@@ -15,16 +51,16 @@ services:
     ports:
       - "7788:7788"
       - "7878:7878"
-    networks:
-      - network-travel-booking-system
-    depends_on:
-      - flight-service
     environment:
+      BPL_DEBUG_ENABLED: true
+      BPL_DEBUG_PORT: 7878
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
       SPRING_LIQUIBASE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
       TRAVEL_BOOKING_SYSTEM_FLIGHT_SERVICE_URI: http://flight-service:8899
-      BPL_DEBUG_ENABLED: true
-      BPL_DEBUG_PORT: 7878
+    networks:
+      - network-travel-booking-system
+    depends_on:
+      - postgres-travel-booking-system
 
   flight-service:
     image: ${IMAGE_NAME_FLIGHT_SERVICE}:${IMAGE_VERSION_FLIGHT_SERVICE}
