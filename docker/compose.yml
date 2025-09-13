@@ -26,8 +26,8 @@ services:
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 6767
       SPRING_DATA_REDIS_HOST: redis-travel-booking-system
-      FLIGHT_SERVICE_URL: http://flight-service:8899
-      FLIGHT_BOOKING_SERVICE_URL: http://flight-booking-service:7788
+      FLIGHT_SERVICE_URI: http://flight-service:8899
+      FLIGHT_BOOKING_SERVICE_URI: http://flight-booking-service:7788
     networks:
       - network-travel-booking-system
     depends_on:
