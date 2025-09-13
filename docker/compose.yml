@@ -33,17 +33,6 @@ services:
     depends_on:
       - redis-travel-booking-system
 
-  rabbitmq-travel-booking-system:
-    image: rabbitmq:${IMAGE_VERSION_RABBITMQ}
-    container_name: rabbitmq-travel-booking-system
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-    networks:
-      - network-travel-booking-system
-
   flight-booking-service:
     image: ${IMAGE_NAME_FLIGHT_BOOKING_SERVICE}:${IMAGE_VERSION_FLIGHT_BOOKING_SERVICE}
     pull_policy: missing
@@ -116,12 +105,29 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - network-travel-booking-system
+
+  rabbitmq-travel-booking-system:
+    image: rabbitmq:${IMAGE_VERSION_RABBITMQ}
+    container_name: rabbitmq-travel-booking-system
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-data:/var/log/rabbitmq
+    networks:
+      - network-travel-booking-system
 
 volumes:
   postgres-data:
     name: postgres-data
   redis-data:
     name: redis-data
+  rabbitmq-data:
+    name: rabbitmq-data
 
 networks:
   network-travel-booking-system:
