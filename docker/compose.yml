@@ -46,6 +46,7 @@ services:
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
       SPRING_LIQUIBASE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
       TRAVEL_BOOKING_SYSTEM_FLIGHT_SERVICE_URI: http://flight-service:8899
+      SPRING_RABBITMQ_HOST: rabbitmq-travel-booking-system
     networks:
       - network-travel-booking-system
     depends_on:
