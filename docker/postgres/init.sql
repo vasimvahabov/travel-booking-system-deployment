@@ -1,2 +1,3 @@
 CREATE DATABASE flights;
 CREATE DATABASE flight_bookings;
+CREATE DATABASE keycloak;
