@@ -125,7 +125,8 @@ services:
   keycloak-travel-booking-system:
     image: keycloak/keycloak:${IMAGE_VERSION_KEYCLOAK}
     container_name: keycloak-travel-booking-system
-    command: start-dev
+#    command: start-dev
+    command: start-dev --import-realm
     ports:
       - "4455:4455"
       - "4545:4545"
@@ -134,7 +135,8 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
       KC_HTTP_PORT: 4455
     volumes:
-      - ./keycloak/keycloak.conf:/opt/keycloak/conf/keycloak.conf
+#      - ./keycloak/keycloak.conf:/opt/keycloak/conf/keycloak.conf
+      - ./keycloak/realm:/opt/keycloak/data/import
     networks:
       - network-travel-booking-system
     depends_on:
