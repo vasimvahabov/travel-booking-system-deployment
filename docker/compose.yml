@@ -28,10 +28,12 @@ services:
       SPRING_DATA_REDIS_HOST: redis-travel-booking-system
       FLIGHT_SERVICE_URI: http://flight-service:8899
       FLIGHT_BOOKING_SERVICE_URI: http://flight-booking-service:7788
+      OAUTH2_ISSUER_URI: http://keycloak-travel-booking-system:4455/realms/travel-booking-system
     networks:
       - network-travel-booking-system
     depends_on:
       - redis-travel-booking-system
+      - keycloak-travel-booking-system
 
   flight-booking-service:
     image: ${IMAGE_NAME_FLIGHT_BOOKING_SERVICE}:${IMAGE_VERSION_FLIGHT_BOOKING_SERVICE}
