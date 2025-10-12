@@ -29,6 +29,7 @@ services:
       FLIGHT_SERVICE_URI: http://flight-service:8899
       FLIGHT_BOOKING_SERVICE_URI: http://flight-booking-service:7788
       OAUTH2_ISSUER_URI: http://keycloak-travel-booking-system:4455/realms/travel-booking-system
+      SPA_URL: http://polar-ui:4200
     networks:
       - network-travel-booking-system
     depends_on:
