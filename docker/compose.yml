@@ -67,6 +67,7 @@ services:
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 8989
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flights
+      JWT_ISSUER_URI: http://keycloak-travel-booking-system:4455/realms/travel-booking-system
 #      APPLICATION_TEST_DATA_ENABLED: true
     networks:
       - network-travel-booking-system
