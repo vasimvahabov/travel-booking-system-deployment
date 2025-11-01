@@ -10,6 +10,10 @@ services:
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 5656
       SPRING_RABBITMQ_HOST: rabbitmq-travel-booking-system
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: fluent-bit-travel-booking-system:24224
     networks:
       - network-travel-booking-system
     depends_on:
@@ -30,6 +34,10 @@ services:
       FLIGHT_BOOKING_SERVICE_URI: http://flight-booking-service:7788
       OAUTH2_ISSUER_URI: http://keycloak-travel-booking-system:4455/realms/travel-booking-system
       SPA_URL: http://polar-ui:4200
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: fluent-bit-travel-booking-system:24224
     networks:
       - network-travel-booking-system
     depends_on:
@@ -50,6 +58,10 @@ services:
       SPRING_LIQUIBASE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
       TRAVEL_BOOKING_SYSTEM_FLIGHT_SERVICE_URI: http://flight-service:8899
       SPRING_RABBITMQ_HOST: rabbitmq-travel-booking-system
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: fluent-bit-travel-booking-system:24224
     networks:
       - network-travel-booking-system
     depends_on:
