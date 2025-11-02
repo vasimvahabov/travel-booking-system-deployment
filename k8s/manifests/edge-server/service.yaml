@@ -2,8 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: edge-server
-  labels:
-    app: edge-server
+  namespace: travel-booking-system
 spec:
   type: ClusterIP
   selector:

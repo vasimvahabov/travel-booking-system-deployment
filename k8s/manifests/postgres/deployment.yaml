@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-travel-booking-system
+  name: postgres
+  namespace: travel-booking-system
 spec:
   selector:
     matchLabels:
-      db: postgres-travel-booking-system
+      db: postgres
   template:
     metadata:
       labels:
-        db: postgres-travel-booking-system
+        db: postgres
     spec:
       containers:
-        - name: postgres-travel-booking-system
+        - name: postgres
           image: postgres:17.5
           imagePullPolicy: IfNotPresent
           env:
