@@ -9,15 +9,16 @@ services:
     environment:
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 5656
-      SPRING_RABBITMQ_HOST: rabbitmq-travel-booking-system
+      SPRING_RABBITMQ_HOST: rabbitmq
     logging:
       driver: fluentd
       options:
-        fluentd-address: fluent-bit-travel-booking-system:24224
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: 127.0.0.1:24224
     networks:
       - network-travel-booking-system
     depends_on:
-      - rabbitmq-travel-booking-system
+      - rabbitmq
 
   edge-server:
     image: ${IMAGE_NAME_EDGE_SERVER}:${IMAGE_VERSION_EDGE_SERVER}
@@ -29,20 +30,20 @@ services:
     environment:
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 6767
-      SPRING_DATA_REDIS_HOST: redis-travel-booking-system
+      SPRING_DATA_REDIS_HOST: redis
       FLIGHT_SERVICE_URI: http://flight-service:8899
       FLIGHT_BOOKING_SERVICE_URI: http://flight-booking-service:7788
-      OAUTH2_ISSUER_URI: http://keycloak-travel-booking-system:4455/realms/travel-booking-system
-      SPA_URL: http://polar-ui:4200
+      OAUTH2_ISSUER_URI: http://keycloak:4455/realms/travel-booking-system
     logging:
       driver: fluentd
       options:
-        fluentd-address: fluent-bit-travel-booking-system:24224
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: 127.0.0.1:24224
     networks:
       - network-travel-booking-system
     depends_on:
-      - redis-travel-booking-system
-      - keycloak-travel-booking-system
+      - redis
+      - keycloak
 
   flight-booking-service:
     image: ${IMAGE_NAME_FLIGHT_BOOKING_SERVICE}:${IMAGE_VERSION_FLIGHT_BOOKING_SERVICE}
@@ -54,18 +55,19 @@ services:
     environment:
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 7878
-      SPRING_R2DBC_URL: r2dbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
-      SPRING_LIQUIBASE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flight_bookings
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/flight_bookings
+      SPRING_LIQUIBASE_URL: jdbc:postgresql://postgres:5432/flight_bookings
       TRAVEL_BOOKING_SYSTEM_FLIGHT_SERVICE_URI: http://flight-service:8899
-      SPRING_RABBITMQ_HOST: rabbitmq-travel-booking-system
+      SPRING_RABBITMQ_HOST: rabbitmq
     logging:
       driver: fluentd
       options:
-        fluentd-address: fluent-bit-travel-booking-system:24224
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: 127.0.0.1:24224
     networks:
       - network-travel-booking-system
     depends_on:
-      - postgres-travel-booking-system
+      - postgres
 
   flight-service:
     image: ${IMAGE_NAME_FLIGHT_SERVICE}:${IMAGE_VERSION_FLIGHT_SERVICE}
@@ -78,23 +80,24 @@ services:
       BPL_JVM_THREAD_COUNT: 50
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 8989
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-travel-booking-system:5432/flights
-      JWT_ISSUER_URI: http://keycloak-travel-booking-system:4455/realms/travel-booking-system
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/flights
+      JWT_ISSUER_URI: http://keycloak:4455/realms/travel-booking-system
     #      APPLICATION_TEST_DATA_ENABLED: true
     logging:
       driver: fluentd
       options:
-        fluentd-address: fluent-bit-travel-booking-system:24224
+#        fluentd-address: fluent-bit:24224
+        fluentd-address: 127.0.0.1:24224
     networks:
       - network-travel-booking-system
     depends_on:
-      - postgres-travel-booking-system
-      - fluent-bit-travel-booking-system
+      - postgres
+      - fluent-bit
 
-  pgadmin-travel-booking-system:
+  pgadmin:
     image: dpage/pgadmin4:${IMAGE_VERSION_PGADMIN}
     pull_policy: missing
-    container_name: pgadmin-travel-booking-system
+    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -103,10 +106,10 @@ services:
     networks:
       - network-travel-booking-system
 
-  postgres-travel-booking-system:
+  postgres:
     image: postgres:${IMAGE_VERSION_POSTGRES}
     pull_policy: missing
-    container_name: postgres-travel-booking-system
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -119,10 +122,10 @@ services:
     networks:
       - network-travel-booking-system
 
-  redis-travel-booking-system:
+  redis:
     image: redis:${IMAGE_VERSION_REDIS}
     pull_policy: missing
-    container_name: redis-travel-booking-system
+    container_name: redis
     ports:
       - "6379:6379"
     volumes:
@@ -130,9 +133,9 @@ services:
     networks:
       - network-travel-booking-system
 
-  rabbitmq-travel-booking-system:
+  rabbitmq:
     image: rabbitmq:${IMAGE_VERSION_RABBITMQ}
-    container_name: rabbitmq-travel-booking-system
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -142,9 +145,9 @@ services:
     networks:
       - network-travel-booking-system
 
-  keycloak-travel-booking-system:
+  keycloak:
     image: keycloak/keycloak:${IMAGE_VERSION_KEYCLOAK}
-    container_name: keycloak-travel-booking-system
+    container_name: keycloak
 #    command: start-dev
     command: start-dev --import-realm
     ports:
@@ -153,7 +156,7 @@ services:
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
-      KC_HOSTNAME: keycloak-travel-booking-system
+      KC_HOSTNAME: keycloak
       KC_HTTP_PORT: 4455
     volumes:
       - ./keycloak/config:/opt/keycloak/conf/
@@ -161,11 +164,11 @@ services:
     networks:
       - network-travel-booking-system
     depends_on:
-      - postgres-travel-booking-system
+      - postgres
 
-  grafana-travel-booking-system:
+  grafana:
     image: grafana/grafana:${IMAGE_VERSION_GRAFANA}
-    container_name: grafana-travel-booking-system
+    container_name: grafana
     ports:
       - "3000:3000"
     environment:
@@ -179,11 +182,11 @@ services:
     networks:
       - network-travel-booking-system
     depends_on:
-      - loki-travel-booking-system
+      - loki
 
-  loki-travel-booking-system:
+  loki:
     image: grafana/loki:${IMAGE_VERSION_LOKI}
-    container_name: loki-travel-booking-system
+    container_name: loki
     ports:
       - "3100:3100"
     volumes:
@@ -191,11 +194,11 @@ services:
     networks:
       - network-travel-booking-system
     depends_on:
-      - fluent-bit-travel-booking-system
+      - fluent-bit
 
-  fluent-bit-travel-booking-system:
+  fluent-bit:
     image: fluent/fluent-bit:${IMAGE_VERSION_FLUENT_BIT}
-    container_name: fluent-bit-travel-booking-system
+    container_name: fluent-bit
     ports:
       - "24224:24224"
     command: [ "-c", "/fluent-bit/etc/fluent-bit.yaml" ]
