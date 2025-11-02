@@ -14,4 +14,4 @@ spec:
               service:
                 name: edge-server
                 port:
-                  number: 6677
+                  number: 8080

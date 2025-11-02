@@ -9,5 +9,5 @@ spec:
     app: edge-server
   ports:
     - protocol: TCP
-      port: 6677
+      port: 80
       targetPort: 6677

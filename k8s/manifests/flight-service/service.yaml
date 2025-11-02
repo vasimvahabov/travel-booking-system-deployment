@@ -8,5 +8,6 @@ spec:
   selector:
     app: flight-service
   ports:
-    - port: 8899
+    - port: 80
       targetPort: 8899
+      protocol: TCP
