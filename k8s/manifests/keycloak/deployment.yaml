@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: travel-booking-system
+spec:
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: keycloak/keycloak:26.3
+          imagePullPolicy: IfNotPresent
+          args:
+            - "start-dev"
+            - "--import-realm"
+          env:
+            - name: KC_HOSTNAME
+              value: keycloak
+            - name: KC_HTTP_PORT
+              value: "4455"
+          envFrom:
+            - secretRef:
+                name: keycloak
+          ports:
+            - containerPort: 4455
+          resources:
+            requests:
+              cpu: 100m
+              memory: 350Mi
+            limits:
+              cpu: 500m
+              memory: 750Mi
+          volumeMounts:
+            - name: keycloak-config
+              mountPath: /opt/keycloak/conf/
+            - name: keycloak-realm
+              mountPath: /opt/keycloak/data/import
+      volumes:
+        - name: keycloak-config
+          configMap:
+            name: keycloak-config
+        - name: keycloak-realm
+          configMap:
+            name: keycloak-realm
