@@ -165,6 +165,17 @@ services:
     depends_on:
       - postgres
 
+  prometheus:
+    image: prom/prometheus:${IMAGE_VERSION_PROMETHEUS}
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus-data:/prometheus
+      - ./observability/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - network-travel-booking-system
+
   grafana:
     image: grafana/grafana:${IMAGE_VERSION_GRAFANA}
     container_name: grafana
@@ -182,6 +193,7 @@ services:
       - network-travel-booking-system
     depends_on:
       - loki
+      - prometheus
 
   loki:
     image: grafana/loki:${IMAGE_VERSION_LOKI}
@@ -219,6 +231,8 @@ volumes:
     name: loki-data
   grafana-data:
     name: grafana-data
+  prometheus-data:
+    name: prometheus-data
 
 networks:
   network-travel-booking-system:
