@@ -19,6 +19,7 @@ services:
       - network-travel-booking-system
     depends_on:
       - rabbitmq
+      - fluent-bit
 
   edge-server:
     image: ${IMAGE_NAME_EDGE_SERVER}:${IMAGE_VERSION_EDGE_SERVER}
@@ -34,6 +35,12 @@ services:
       FLIGHT_SERVICE_URI: http://flight-service:8001
       FLIGHT_BOOKING_SERVICE_URI: http://flight-booking-service:8002
       OAUTH2_ISSUER_URI: http://keycloak:8080/realms/travel-booking-system
+      JAVA_TOOL_OPTIONS: -javaagent:/workspace/BOOT-INF/lib/opentelemetry-javaagent-2.21.0.jar
+      OTEL_SERVICE_NAME: edge-server
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+      SPA_URL: http://spa-ui:4200
     logging:
       driver: fluentd
       options:
@@ -44,6 +51,7 @@ services:
     depends_on:
       - redis
       - keycloak
+      - fluent-bit
 
   flight-booking-service:
     image: ${IMAGE_NAME_FLIGHT_BOOKING_SERVICE}:${IMAGE_VERSION_FLIGHT_BOOKING_SERVICE}
@@ -68,6 +76,7 @@ services:
       - network-travel-booking-system
     depends_on:
       - postgres
+      - fluent-bit
 
   flight-service:
     image: ${IMAGE_NAME_FLIGHT_SERVICE}:${IMAGE_VERSION_FLIGHT_SERVICE}
@@ -83,6 +92,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/flights
       JWT_ISSUER_URI: http://keycloak:4455/realms/travel-booking-system
     #      APPLICATION_TEST_DATA_ENABLED: true
+      JAVA_TOOL_OPTIONS: -javaagent:/workspace/BOOT-INF/lib/opentelemetry-javaagent-2.21.0.jar
+      OTEL_SERVICE_NAME: flight-service
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
     logging:
       driver: fluentd
       options:
@@ -176,6 +190,31 @@ services:
     networks:
       - network-travel-booking-system
 
+  loki:
+    image: grafana/loki:${IMAGE_VERSION_LOKI}
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+    networks:
+      - network-travel-booking-system
+    depends_on:
+      - fluent-bit
+
+  tempo:
+    image: grafana/tempo:2.9.0
+    container_name: tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+    volumes:
+      - ./observability/tempo/tempo.yaml:/etc/tempo.yaml
+      - tempo-data:/var/tempo
+    networks:
+      - network-travel-booking-system
+
   grafana:
     image: grafana/grafana:${IMAGE_VERSION_GRAFANA}
     container_name: grafana
@@ -194,18 +233,7 @@ services:
     depends_on:
       - loki
       - prometheus
-
-  loki:
-    image: grafana/loki:${IMAGE_VERSION_LOKI}
-    container_name: loki
-    ports:
-      - "3100:3100"
-    volumes:
-      - loki-data:/loki
-    networks:
-      - network-travel-booking-system
-    depends_on:
-      - fluent-bit
+      - tempo
 
   fluent-bit:
     image: fluent/fluent-bit:${IMAGE_VERSION_FLUENT_BIT}
@@ -233,6 +261,8 @@ volumes:
     name: grafana-data
   prometheus-data:
     name: prometheus-data
+  tempo-data:
+    name: tempo-data
 
 networks:
   network-travel-booking-system:
