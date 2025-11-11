@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flight-service-config
+  labels:
+    app: flight-service
+  namespace: travel-booking-system
+data:
+  application.yaml: |
+    info:
+      environment: Production
+    spring:
+      datasource:
+        url: jdbc:postgresql://postgres:5432/flights
+      security:
+        oauth2:
+          resourceserver:
+            jwt:
+              issuer-uri: http://keycloak:4455/realms/travel-booking-system

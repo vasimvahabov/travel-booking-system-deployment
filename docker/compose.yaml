@@ -89,6 +89,8 @@ services:
       BPL_JVM_THREAD_COUNT: 50
       BPL_DEBUG_ENABLED: true
       BPL_DEBUG_PORT: 7001
+      SPRING_CONFIG_IMPORT: "optional:configserver:"
+#      SPRING_CONFIG_IMPORT: "configserver:"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/flights
       JWT_ISSUER_URI: http://keycloak:4455/realms/travel-booking-system
     #      APPLICATION_TEST_DATA_ENABLED: true

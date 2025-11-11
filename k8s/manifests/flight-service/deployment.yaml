@@ -17,7 +17,7 @@ spec:
       containers:
         - name: flight-service
           imagePullPolicy: IfNotPresent
-          image: ghcr.io/vasimvahabov/flight-service:0.5.0
+          image: ghcr.io/vasimvahabov/flight-service:0.8.0
           lifecycle:
             preStop:
               exec:
@@ -25,21 +25,24 @@ spec:
           env:
             - name: BPL_JVM_THREAD_COUNT
               value: "50"
-            - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://postgres/flights"
-            - name: JWT_ISSUER_URI
-              value: http://keycloak:4455/realms/travel-booking-system
           ports:
-            - containerPort: 8899
+            - containerPort: 8001
           livenessProbe:
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 5
             httpGet:
-              port: 8899
+              port: 8001
               path: /actuator/health/liveness
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 15
             httpGet:
-              port: 8899
+              port: 8001
               path: /actuator/health/readiness
+          volumeMounts:
+            - name: flight-service-config
+              mountPath: /workspace/config
+      volumes:
+        - name: flight-service-config
+          configMap:
+            name: flight-service-config
