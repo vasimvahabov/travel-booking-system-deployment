@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
         - name: edge-server
-          image: ghcr.io/vasimvahabov/edge-server:0.5.0
+          image: ghcr.io/vasimvahabov/edge-server:0.7.0
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 6677
+             - containerPort: 8003
           env:
             - name: FLIGHT_SERVICE_URL
               value: http://flight-service
@@ -34,12 +34,12 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 5
             httpGet:
-              port: 6677
+              port: 8003
               path: /actuator/health/liveness
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 15
             httpGet:
-              port: 6677
+              port: 8003
               path: /actuator/health/readiness
 
