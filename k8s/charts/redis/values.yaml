@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: redis
+  pullPolicy: IfNotPresent
+
+service:
+  port: 6379
+  targetPort: 6379
+  type: ClusterIP
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 50Mi
+  limits:
+    cpu: 200m
+    memory: 100Mi
+
