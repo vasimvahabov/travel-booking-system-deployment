@@ -1,0 +1,11 @@
+info:
+  environment: Production
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/flights
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/travel-booking-system

@@ -1,0 +1,50 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/vasimvahabov/flight-service
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+  targetPort: 8001
+  type: ClusterIP
+
+lifecycle:
+  preStop:
+    exec:
+      command: [ "sh", "-c", "sleep 5" ]
+
+env:
+  - name: BPL_JVM_THREAD_COUNT
+    value: "50"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 200Mi
+  limits:
+    cpu: 200m
+    memory: 300Mi
+
+volumeMounts:
+  - name: flight-service-config
+    mountPath: /workspace/config
+
+volumes:
+  - name: flight-service-config
+    configMap:
+      name: flight-service-config
+
+livenessProbe:
+  initialDelaySeconds: 20
+  periodSeconds: 5
+  httpGet:
+    port: 8001
+    path: /actuator/health/liveness
+
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 15
+  httpGet:
+    port: 8001
+    path: /actuator/health/readiness
