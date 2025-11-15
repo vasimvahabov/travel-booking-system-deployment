@@ -18,10 +18,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.env }}
-          env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "postgres.fullname" . }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
           {{- with .Values.resources }}

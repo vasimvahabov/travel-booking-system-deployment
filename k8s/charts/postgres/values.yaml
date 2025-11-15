@@ -9,12 +9,6 @@ service:
   targetPort: 5432
   type: ClusterIP
 
-env:
-  - name: POSTGRES_USER
-    value: user_postgres
-  - name: POSTGRES_PASSWORD
-    value: 6eEvI63t20
-
 resources:
   requests:
     cpu: 100m
