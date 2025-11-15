@@ -31,15 +31,16 @@ spec:
             - name: OAUTH2_ISSUER_URI
               value: http://keycloak:8080/realms/travel-booking-system
           livenessProbe:
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            failureThreshold: 2
+            initialDelaySeconds: 240
+            periodSeconds: 60
             httpGet:
               port: 8003
               path: /actuator/health/liveness
           readinessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 360
+            failureThreshold: 5
             periodSeconds: 15
             httpGet:
               port: 8003
               path: /actuator/health/readiness
-
