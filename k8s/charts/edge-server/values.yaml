@@ -1,0 +1,74 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/vasimvahabov/edge-server
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+  targetPort: 8003
+  type: ClusterIP
+
+lifecycle:
+  preStop:
+    exec:
+      command: [ "sh", "-c", "sleep 5" ]
+
+env:
+  - name: FLIGHT_SERVICE_URL
+    value: http://flight-service
+  - name: FLIGHT_BOOKING_SERVICE_URL
+    value: http://flight-booking-service
+  - name: SPRING_DATA_REDIS_HOST
+    value: redis
+  - name: SPRING_CLOUD_CONFIG_URI
+    value: http://config-service
+  - name: OAUTH2_ISSUER_URI
+    value: http://keycloak:8080/realms/travel-booking-system
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 500Mi
+  limits:
+    cpu: 300m
+    memory: 550Mi
+
+volumeMounts:
+  - name: flight-service-config
+    mountPath: /workspace/config
+
+volumes:
+  - name: flight-service-config
+    configMap:
+      name: flight-service-config
+
+livenessProbe:
+  failureThreshold: 2
+  initialDelaySeconds: 240
+  periodSeconds: 60
+  httpGet:
+    port: 8003
+    path: /actuator/health/liveness
+
+readinessProbe:
+  initialDelaySeconds: 360
+  failureThreshold: 5
+  periodSeconds: 15
+  httpGet:
+    port: 8003
+    path: /actuator/health/readiness
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: edge-server
+              port:
+                number: 8080
