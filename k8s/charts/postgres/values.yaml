@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+
+service:
+  port: 5432
+  targetPort: 5432
+  type: ClusterIP
+
+env:
+  - name: POSTGRES_USER
+    value: user_postgres
+  - name: POSTGRES_PASSWORD
+    value: 6eEvI63t20
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 60Mi
+  limits:
+    cpu: 200m
+    memory: 120Mi
+
+volumeMounts:
+  - mountPath: /docker-entrypoint-initdb.d
+    name: postgres-init
+
+volumes:
+  - name: postgres-init
+    configMap:
+      name: postgres-init
