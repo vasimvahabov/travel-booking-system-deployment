@@ -32,8 +32,8 @@ spec:
               memory: 120Mi
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d
-              name: volume-postgres-init
+              name: postgres-init
       volumes:
-        - name: volume-postgres-init
+        - name: postgres-init
           configMap:
             name: postgres-init

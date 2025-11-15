@@ -4,7 +4,7 @@ metadata:
   name: flight-service
   namespace: travel-booking-system
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: flight-service
@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: flight-service
-          imagePullPolicy: IfNotPresent
           image: ghcr.io/vasimvahabov/flight-service:0.8.0
+          imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
               exec:

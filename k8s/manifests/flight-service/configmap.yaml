@@ -16,4 +16,4 @@ data:
         oauth2:
           resourceserver:
             jwt:
-              issuer-uri: http://keycloak:4455/realms/travel-booking-system
+              issuer-uri: http://keycloak:8080/realms/travel-booking-system
