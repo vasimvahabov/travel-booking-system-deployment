@@ -1,0 +1,27 @@
+name: Production Stage
+on:
+  repository_dispatch:
+    types: [delivery]
+
+jobs:
+  set-version:
+    name: Set Application Version for the Helm Chart
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    env:
+      APP_IMAGE: ${{ github.event.client_payload.app_image }}
+      APP_NAME: ${{ github.event.client_payload.app_name }}
+      APP_VERSION: ${{ github.event.client_payload.app_version }}
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v5.0.1
+      - name: Set application version
+        run: |
+          cd k8s/charts/${{ env.APP_NAME }}
+          sed -i "s/^appVersion:.*/appVersion: \"${{ env.APP_VERSION }}\"/" Chart.yaml
+      - name: Commit and Push the changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore(${{ env.APP_NAME}}): upgrade ${{ env.APP_NAME }} version to ${{ env.APP_VERSION }} in Helm Chart"
+          branch: main
