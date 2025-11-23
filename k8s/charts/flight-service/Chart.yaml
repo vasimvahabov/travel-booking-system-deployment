@@ -3,4 +3,4 @@ name: flight-service
 description: Flight Service Helm chart for Kubernetes
 type: application
 version: 1.0.0
-appVersion: "24e42e990326f9ad42a638f01787777c30797de4"
+appVersion: "e5e64ff11a6a330419ccb7c42456cb1d7490ac18"
