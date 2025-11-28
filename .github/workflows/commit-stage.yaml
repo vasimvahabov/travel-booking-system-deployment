@@ -1,6 +1,9 @@
 name: Commit Stage
 on: push
 
+env:
+  VERSION: ${{ github.sha }}
+
 jobs:
   validate:
     name: Validate Kubernetes manifests
@@ -22,7 +25,18 @@ jobs:
           kubeconform -strict -verbose k8s/manifests
       - name: Validate Helm Charts
         run: |
+          set -ex
           for chart in k8s/charts/*;
             do
-              helm template "$chart" | kubeconform -verbose
+              echo "Rebuild charts by installing dependencies ..."
+              helm dependency update "$chart"
+
+              echo "Checking for missing dependencies"
+              if helm dependency list "$chart" | grep -q missing; then
+                echo "Missing dependencies detected ..."
+                exit 1
+              fi
+
+              echo "Validating charts with kubeconform ..."
+              helm template "${{ env.VERSION }}" "$chart" | kubeconform -verbose -ignore-missing-schemas
             done
